@@ -30,7 +30,7 @@ X = pd.get_dummies(X)
 print("Datos listos...")
 print("Iniciando GridSearchCV para encontrar los mejores hiperparametros...")
 
-param_grid = {'min_samples_split': [8,10,12,15],'max_depth':[10,15,20,None]}
+param_grid = {'min_samples_split': [6,10,12,15],'max_depth':[10,15,20,None]}
 
 grid = GridSearchCV(DecisionTreeClassifier(random_state=14142135), param_grid, cv=5, scoring='accuracy')
 
