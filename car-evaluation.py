@@ -31,9 +31,23 @@ X = pd.get_dummies(X)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=14142135)
 
 print("Datos listos...")
-print("Entrenando el modelo...")
+print("\nEntrenando el modelo...")
 model = DecisionTreeClassifier(random_state=14142135)
 model.fit(X_train, y_train)
+
+
+# Evaluacion del modelo
+y_pred = model.predict(X_test)
+score = accuracy_score(y_test, y_pred)
+
+print("\n--- Resultados ---")
+print(f"El score es: {score}")
+
+# Ver que predijo en algunas filas de prueba
+print("\nPredicciones (primeras 10):")
+print(y_pred[:10])
+print("\nValores Reales (primeras 10):")
+print(y_test.values[:10])
 
 
 
