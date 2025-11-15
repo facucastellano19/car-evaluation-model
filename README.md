@@ -1,6 +1,6 @@
 # 🚗 Clasificador de Evaluación de Autos
 
-Este proyecto utiliza un modelo de Árbol de Decisión (`DecisionTreeClassifier`) para predecir la aceptabilidad de un auto basándose en sus atributos. El script carga el dataset "Car Evaluation" directamente desde el repositorio de UCI, lo procesa y entrena un modelo para clasificar los autos.
+Este proyecto utiliza un modelo de Árbol de Decisión (`DecisionTreeClassifier`) para predecir la aceptabilidad de un auto basándose en sus atributos. El script carga el dataset "Car Evaluation" directamente desde el repositorio de UCI, lo procesa y **utiliza `GridSearchCV` para encontrar y entrenar el modelo con los mejores hiperparámetros.**
 
 El objetivo es predecir la columna `class` (clase), que tiene cuatro valores posibles:
 * `unacc` (No Aceptable)
@@ -30,10 +30,10 @@ El objetivo es predecir la columna `class` (clase), que tiene cuatro valores pos
 
 1.  **Carga de Datos:** El script carga el dataset `car.data` directamente desde la URL de UCI usando `pandas`.
 2.  **Asignación de Nombres:** Se asignan los nombres de columna correctos (ya que el archivo `.data` no los incluye).
-3.  **Preprocesamiento (One-Hot Encoding):** Este es el paso clave. Dado que todas las *features* son categóricas (texto), se utiliza `pd.get_dummies()` para convertirlas en un formato numérico (0s y 1s) que el modelo de machine learning pueda entender.
-4.  **División de Datos:** El dataset se divide en un 70% para entrenamiento y un 30% para prueba (`test_size=0.3`). Se usa un `random_state` para que la división sea siempre la misma y los resultados sean reproducibles.
-5.  **Entrenamiento:** Se entrena un `DecisionTreeClassifier` con los datos de entrenamiento.
-6.  **Evaluación:** Se calcula el *score* de `accuracy` (precisión) comparando las predicciones del modelo con los valores reales del set de prueba.
+3.  **Preprocesamiento (One-Hot Encoding):** Este es el paso clave. Dado que todas las *features* son categóricas (texto), se utiliza `pd.get_dummies()` para convertirlas en un formato numérico (0s y 1s) que el modelo pueda entender.
+4.  **Búsqueda de Hiperparámetros (GridSearchCV):** En lugar de una simple división de prueba, el script utiliza `GridSearchCV` con Validación Cruzada (`cv=5`). Esto prueba sistemáticamente múltiples combinaciones de hiperparámetros (como `max_depth` y `min_samples_split`) para encontrar la mejor configuración.
+5.  **Entrenamiento:** Se entrena el objeto `GridSearchCV` con *todos* los datos. Este se encarga de probar todas las combinaciones y seleccionar el mejor modelo.
+6.  **Evaluación:** El script reporta los mejores parámetros encontrados (`best_params_`) y el *score* de *accuracy* promedio (`best_score_`) obtenido de la validación cruzada.
 
 ---
 
@@ -41,7 +41,7 @@ El objetivo es predecir la columna `class` (clase), que tiene cuatro valores pos
 
 * **Python 3.x**
 * **Pandas:** Para la carga y manipulación de datos (incluyendo `get_dummies`).
-* **Scikit-learn (sklearn):** Para el modelo (`DecisionTreeClassifier`) y las métricas (`train_test_split`, `accuracy_score`).
+* **Scikit-learn (sklearn):** Para el modelo (`DecisionTreeClassifier`) y la optimización de hiperparámetros (`GridSearchCV`).
 
 ---
 
@@ -61,17 +61,12 @@ El objetivo es predecir la columna `class` (clase), que tiene cuatro valores pos
 
 ## 📈 Resultados
 
-El script imprimirá en la consola el *score* de precisión (accuracy) del modelo, que suele ser muy alto para este dataset.
+El script imprimirá en la consola los mejores hiperparámetros encontrados y el *score* promedio (confiable) de la validación cruzada.
 
-**Salida de ejemplo:**
-
+**Salida de ejemplo (después del refinamiento):**
 Cargando el dataset... 
-Datos listos...
+Datos listos... 
+Iniciando GridSearchCV para encontrar los mejores hiperparámetros...
 
-Entrenando el modelo...
-
---- Resultados --- El score es: 0.9672447013487476
-
-Predicciones (primeras 10): ['unacc' 'unacc' 'unacc' 'unacc' 'unacc' 'unacc' 'acc' 'acc' 'acc' 'unacc']
-
-Valores Reales (primeras 10): ['unacc' 'unacc' 'unacc' 'unacc' 'unacc' 'unacc' 'vgood' 'acc' 'acc' 'unacc']
+Mejores parametros {'max_depth': 10, 'min_samples_split': 6} 
+Mejor puntaje 0.7587132445338025
