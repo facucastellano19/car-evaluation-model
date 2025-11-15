@@ -1,5 +1,5 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 
@@ -27,27 +27,17 @@ X = pd.get_dummies(X)
 
 #print(X.head())
 
-# Dividir en entrenamiento y prueba
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=14142135)
-
 print("Datos listos...")
-print("\nEntrenando el modelo...")
-model = DecisionTreeClassifier(random_state=14142135)
-model.fit(X_train, y_train)
+print("Iniciando GridSearchCV para encontrar los mejores hiperparametros...")
 
+param_grid = {'min_samples_split': [6,10,12,15],'max_depth':[10,15,20,None]}
 
-# Evaluacion del modelo
-y_pred = model.predict(X_test)
-score = accuracy_score(y_test, y_pred)
+grid = GridSearchCV(DecisionTreeClassifier(random_state=14142135), param_grid, cv=5, scoring='accuracy')
 
-print("\n--- Resultados ---")
-print(f"El score es: {score}")
+grid.fit(X,y)
 
-# Ver que predijo en algunas filas de prueba
-print("\nPredicciones (primeras 10):")
-print(y_pred[:10])
-print("\nValores Reales (primeras 10):")
-print(y_test.values[:10])
+print("\nMejores parametros ", grid.best_params_)
+print("Mejor puntaje ", grid.best_score_)
 
 
 
