@@ -1,6 +1,6 @@
 # 🚗 Clasificador de Evaluación de Autos
 
-Este proyecto utiliza un modelo de Árbol de Decisión (`DecisionTreeClassifier`) para predecir la aceptabilidad de un auto basándose en sus atributos. El script carga el dataset "Car Evaluation" directamente desde el repositorio de UCI, lo procesa y **utiliza `GridSearchCV` para encontrar y entrenar el modelo con los mejores hiperparámetros.**
+Este proyecto utiliza un modelo de Árbol de Decisión (`DecisionTreeClassifier`) para predecir la aceptabilidad de un auto basándose en sus atributos. El script carga el dataset "Car Evaluation" desde el repositorio de UCI, lo procesa, encuentra los mejores hiperparámetros con `GridSearchCV` y **evalúa el modelo final en un conjunto de datos de prueba para medir su rendimiento real.**
 
 El objetivo es predecir la columna `class` (clase), que tiene cuatro valores posibles:
 * `unacc` (No Aceptable)
@@ -28,20 +28,20 @@ El objetivo es predecir la columna `class` (clase), que tiene cuatro valores pos
 
 ## 🤖 Flujo de Trabajo del Script
 
-1.  **Carga de Datos:** El script carga el dataset `car.data` directamente desde la URL de UCI usando `pandas`.
-2.  **Asignación de Nombres:** Se asignan los nombres de columna correctos (ya que el archivo `.data` no los incluye).
-3.  **Preprocesamiento (One-Hot Encoding):** Este es el paso clave. Dado que todas las *features* son categóricas (texto), se utiliza `pd.get_dummies()` para convertirlas en un formato numérico (0s y 1s) que el modelo pueda entender.
-4.  **Búsqueda de Hiperparámetros (GridSearchCV):** En lugar de una simple división de prueba, el script utiliza `GridSearchCV` con Validación Cruzada (`cv=5`). Esto prueba sistemáticamente múltiples combinaciones de hiperparámetros (como `max_depth` y `min_samples_split`) para encontrar la mejor configuración.
-5.  **Entrenamiento:** Se entrena el objeto `GridSearchCV` con *todos* los datos. Este se encarga de probar todas las combinaciones y seleccionar el mejor modelo.
-6.  **Evaluación:** El script reporta los mejores parámetros encontrados (`best_params_`) y el *score* de *accuracy* promedio (`best_score_`) obtenido de la validación cruzada.
+1.  **Carga de Datos:** El script carga el dataset `car.data` usando `pandas` y asigna los nombres de columna correctos.
+2.  **Preprocesamiento:** Todas las características categóricas (texto) se convierten a un formato numérico usando `pd.get_dummies()` (One-Hot Encoding) para que el modelo pueda procesarlas.
+3.  **División de Datos:** El dataset se divide en un conjunto de entrenamiento (80%) y un conjunto de prueba (20%) usando `train_test_split`. El modelo solo "aprenderá" de los datos de entrenamiento.
+4.  **Búsqueda de Hiperparámetros:** Se utiliza `GridSearchCV` para probar sistemáticamente múltiples combinaciones de hiperparámetros (como `max_depth`, `min_samples_split`, etc.) sobre el conjunto de entrenamiento mediante validación cruzada (`cv=5`).
+5.  **Entrenamiento del Mejor Modelo:** Una vez que `GridSearchCV` encuentra la mejor combinación de hiperparámetros, re-entrena automáticamente un modelo final con esa configuración usando **todo el conjunto de entrenamiento**.
+6.  **Evaluación Final:** El rendimiento del modelo final (`best_estimator_`) se mide en el **conjunto de prueba**, que contiene datos que el modelo nunca ha visto. Se calcula el `accuracy` y se genera un `classification_report` detallado para obtener una medida imparcial de su capacidad de generalización.
 
 ---
 
 ## 🛠️ Tecnologías Utilizadas
 
 * **Python 3.x**
-* **Pandas:** Para la carga y manipulación de datos (incluyendo `get_dummies`).
-* **Scikit-learn (sklearn):** Para el modelo (`DecisionTreeClassifier`) y la optimización de hiperparámetros (`GridSearchCV`).
+* **Pandas:** Para la carga y manipulación de datos.
+* **Scikit-learn (sklearn):** Para el modelo (`DecisionTreeClassifier`), la división de datos (`train_test_split`), la optimización (`GridSearchCV`) y las métricas de evaluación.
 
 ---
 
@@ -61,12 +61,16 @@ El objetivo es predecir la columna `class` (clase), que tiene cuatro valores pos
 
 ## 📈 Resultados
 
-El script imprimirá en la consola los mejores hiperparámetros encontrados y el *score* promedio (confiable) de la validación cruzada.
+El script imprimirá los mejores hiperparámetros, el puntaje de la validación cruzada y, lo más importante, el rendimiento final del modelo en el conjunto de prueba.
 
-**Salida de ejemplo (después del refinamiento):**
-Cargando el dataset... 
-Datos listos... 
-Iniciando GridSearchCV para encontrar los mejores hiperparámetros...
+**Salida de ejemplo:**
 
-Mejores parametros {'max_depth': 10, 'min_samples_split': 6} 
-Mejor puntaje 0.7587132445338025
+Cargando el dataset...
+Datos listos...
+Iniciando GridSearchCV para encontrar los mejores hiperparametros...       
+
+Mejores hiperparámetros encontrados: {'max_depth': 15, 'min_samples_leaf': 1, 'min_samples_split': 2}
+Mejor puntaje de validación cruzada (accuracy): 0.9652697117145397
+
+Evaluando el mejor modelo en el conjunto de prueba...
+Accuracy del modelo en el conjunto de prueba (no visto): 0.9682080924855492
