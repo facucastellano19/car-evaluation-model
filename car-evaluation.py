@@ -1,8 +1,10 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split, GridSearchCV
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeClassifier,plot_tree
 from sklearn.metrics import accuracy_score, classification_report
 import ssl
+import matplotlib.pyplot as plt
+
 
 #Cargar el data set
 print("Cargando el dataset...")
@@ -37,7 +39,7 @@ print("Datos listos...")
 print("Iniciando GridSearchCV para encontrar los mejores hiperparametros...")
 
 param_grid = {
-    'max_depth': [3, 5, 8, 10, 15, 20],
+    'max_depth': [3, 5, 8, 15, 20],
     'min_samples_split': [2, 5, 10, 15],
     'min_samples_leaf': [1, 2, 5, 10,20]
 }
@@ -55,3 +57,15 @@ best_model = grid.best_estimator_
 y_pred = best_model.predict(X_test)
 test_accuracy = accuracy_score(y_test, y_pred)
 print(f"Accuracy del modelo en el conjunto de prueba (no visto): {test_accuracy}")
+
+
+plt.figure(figsize=(20, 10))
+plot_tree(best_model, 
+          feature_names=X.columns.tolist(), 
+          class_names=best_model.classes_, 
+          filled=True,
+          rounded=True,
+          max_depth=5,
+          fontsize=5)
+plt.title("Arbol de decision - Primeros 5 niveles")
+plt.show()
