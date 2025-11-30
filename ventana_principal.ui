@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VentanaPrincipal</class>
+ <widget class="QMainWindow" name="VentanaPrincipal">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>650</width>
+    <height>500</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Analizador de Evaluación de Autos</string>
+  </property>
+  <widget class="QWidget" name="widget_central">
+   <layout class="QVBoxLayout" name="disposicion_vertical">
+    <item>
+     <widget class="QGroupBox" name="grupo_dataset">
+      <property name="title">
+       <string>1. Selección del Dataset</string>
+      </property>
+      <layout class="QHBoxLayout" name="disposicion_horizontal">
+       <item>
+        <widget class="QLabel" name="etiqueta_archivo">
+         <property name="text">
+          <string>Archivo CSV:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="linea_ruta_archivo">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="placeholderText">
+          <string>Selecciona un archivo .csv o .data</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="boton_buscar">
+         <property name="text">
+          <string>Buscar...</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="boton_ejecutar">
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>2. Ejecutar Análisis del Modelo</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QGroupBox" name="grupo_resultados">
+      <property name="title">
+       <string>3. Resultados</string>
+      </property>
+      <layout class="QVBoxLayout" name="disposicion_vertical_2">
+       <item>
+        <widget class="QTextEdit" name="texto_resultados">
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="barra_menu">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>650</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="barra_estado"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
